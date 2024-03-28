@@ -21,7 +21,7 @@ namespace atm
 			
 			int saldo;
 			Random rnd = new Random();
-			saldo = rnd.Next(1000);
+			saldo = rnd.Next(1200);
 			
 			while (pin() != true) {
 				// ejecuta la función "pin" mientras retorne un valor diferente de verdadero.

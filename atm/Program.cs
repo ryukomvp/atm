@@ -24,26 +24,30 @@ namespace atm
 			saldo = rnd.Next(1200);
 			
 			while (pin() != true) {
-				// ejecuta la función "pin" mientras retorne un valor diferente de verdadero.
+				// Ejecuta la función "pin" mientras retorne un valor diferente de verdadero.
 			}
 			
 			do
 			{
 				switch (menu()) {
 					case 1:
+						// Opción 1: Consulta de saldo.
 						consulta_saldo(saldo);
 						break;
 					case 2:
+						// Opción 2: retiro de efectivo.
 						while (retiro(saldo) != true) {
-							// ejecuta la función "retiro" mientras retorne un valor diferente de verdadero.
+							// Ejecuta la función "retiro" mientras retorne un valor diferente de verdadero.
 						}
 						break;
 					case 3:
+						// Opción 3: depósito de efectivo.
 						while (deposito(saldo) != true) {
-							// ejecuta la función "deposito" mientras retorne un valor diferente de verdadero.
+							// Ejecuta la función "deposito" mientras retorne un valor diferente de verdadero.
 						}
 						break;
 					case 4:
+						// Opción 4: salir.
 						creditos();
 						Environment.Exit(0);
 						break;
@@ -57,6 +61,7 @@ namespace atm
 			} while (salir());
 		}
 		
+		// Método (procedimiento) para validar el pin ingresado por el ususario. Se verifica que sea una cantidad de cuatro dígitos numéricos.
 		static Boolean pin() {
 			try {
 				string entrada;
@@ -69,7 +74,7 @@ namespace atm
 				} else {
 					Console.Clear();
 					Console.ForegroundColor = ConsoleColor.Red;
-					Console.WriteLine("\n\tEl pin debe ser de cuatro dígitos númericos.");
+					Console.WriteLine("\n\tEl pin debe ser de cuatro dígitos numéricos.");
 					Console.ForegroundColor = ConsoleColor.White;
 					
 					return false;
@@ -84,6 +89,7 @@ namespace atm
 			}
 		}
 		
+		// Método (procedimiento) para imprimir el menú del cajero automático y capturar la opción ingresada por el usuario.
 		static int menu()
 		{
 			Console.Clear();
@@ -101,6 +107,8 @@ namespace atm
 			return opcion;
 		}
 		
+		// Método (procedimiento parametrizado) para conslutar el saldo ficticio que tiene el usuario.
+		// Parámetros: saldo (entero)
 		static void consulta_saldo(int saldo)
 		{
 			Console.Clear();
@@ -120,19 +128,28 @@ namespace atm
 			}
 		}
 		
+		// Método (procedimiento parametrizado) para retirar efectivo de la cuenta del usuario.
+		// Parámetros: saldo (entero)
 		static Boolean retiro(int saldo)
 		{
 			Console.Clear();
 			try {
+				string entrada;
 				int cantidad;
 				
 				Console.WriteLine("\n\tOpción seleccionada: Depósito");
 				Console.WriteLine("\tEl saldo que posee su cuenta es: {0}", saldo);
 				Console.Write("\n\tIngrese la cantidad que desea retirar: ");
-				int.TryParse(Console.ReadLine(), out cantidad);
+				entrada = Console.ReadLine();
 				Console.Clear();
 				
-				if (cantidad == 0) {
+				if (!int.TryParse(entrada, out cantidad)) {
+					Console.ForegroundColor = ConsoleColor.Red;
+					Console.Write("\n\tDebe ingresar un carácter numérico.");
+					Console.ForegroundColor = ConsoleColor.White;
+					Console.ReadKey(true);
+					return false;
+				} else if (cantidad == 0) {
 					Console.ForegroundColor = ConsoleColor.Red;
 					Console.Write("\n\tLa cantidad a retirar no puede ser cero.");
 					Console.ForegroundColor = ConsoleColor.White;
@@ -178,17 +195,28 @@ namespace atm
 			}
 		}
 		
+		// Método (procedimiento parametrizado) para depositar saldo en la cuenta del ususario.
+		// Parámetros: saldo (entero)
 		static Boolean deposito(int saldo)
 		{
 			Console.Clear();
 			try {
+				string entrada;
 				int cantidad;
 				
 				Console.WriteLine("\n\tOpción seleccionada: Depósito");
 				Console.WriteLine("\tEl saldo que posee su cuenta es: {0}", saldo);
 				Console.Write("\n\tIngrese la cantidad que desea depositar: ");
-				int.TryParse(Console.ReadLine(), out cantidad);
+				entrada = Console.ReadLine();
 				Console.Clear();
+				
+				if (!int.TryParse(entrada, out cantidad)) {
+					Console.ForegroundColor = ConsoleColor.Red;
+					Console.Write("\n\tDebe ingresar un carácter numérico.");
+					Console.ForegroundColor = ConsoleColor.White;
+					Console.ReadKey(true);
+					return false;
+				}
 				
 				Console.WriteLine("\n\tTransacción realizada exitosamente.");
 				Console.Write("\tCantidad depositada: ");
@@ -216,6 +244,7 @@ namespace atm
 			}
 		}
 		
+		// Método (procedimiento) para consultar al usuario si desea salir del programa.
 		static Boolean salir()
 		{
 			try {
@@ -237,6 +266,7 @@ namespace atm
 			}
 		}
 		
+		// Método (procedimiento) para despedir al usuario y mostrar información del desarrollador.
 		static void creditos()
 		{
 			Console.Clear();

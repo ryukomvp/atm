@@ -19,9 +19,11 @@ namespace atm
 			Console.BackgroundColor = ConsoleColor.Black;
 			Console.Clear();
 			
-			int saldo;
+			// Se crea la variable de tipo struct.
+			metodos metodos_atm;
+			// Se crea un valor entero menor que 1200 y se asigna al saldo.
 			Random rnd = new Random();
-			saldo = rnd.Next(1200);
+			metodos_atm.saldo = rnd.Next(1200);
 			
 			while (pin() != true) {
 				// Ejecuta la función "pin" mientras retorne un valor diferente de verdadero.
@@ -30,23 +32,23 @@ namespace atm
 			do
 			{
 				switch (menu()) {
-					case 1:
+					case '1':
 						// Opción 1: Consulta de saldo.
-						consulta_saldo(saldo);
+						metodos_atm.consulta_saldo();
 						break;
-					case 2:
+					case '2':
 						// Opción 2: retiro de efectivo.
-						while (retiro(saldo) != true) {
+						while (metodos_atm.retiro() != true) {
 							// Ejecuta la función "retiro" mientras retorne un valor diferente de verdadero.
 						}
 						break;
-					case 3:
+					case '3':
 						// Opción 3: depósito de efectivo.
-						while (deposito(saldo) != true) {
+						while (metodos_atm.deposito() != true) {
 							// Ejecuta la función "deposito" mientras retorne un valor diferente de verdadero.
 						}
 						break;
-					case 4:
+					case '4':
 						// Opción 4: salir.
 						creditos();
 						Environment.Exit(0);
@@ -93,7 +95,6 @@ namespace atm
 		static int menu()
 		{
 			Console.Clear();
-			int opcion;
 			Console.WriteLine("\n\t\tMenú:");
 			Console.WriteLine("\t|----------------------------|");
 			Console.WriteLine("\t| 1.\tConsulta de saldo    |");
@@ -102,145 +103,152 @@ namespace atm
 			Console.WriteLine("\t| 4.\tSalir                |");
 			Console.WriteLine("\t|----------------------------|");
 			Console.Write("\n\tSeleccione la acción que desea realizar: ");
-			opcion = int.Parse(Console.ReadLine());
+			char opcion = Console.ReadKey().KeyChar;
 			
 			return opcion;
 		}
 		
-		// Método (procedimiento parametrizado) para conslutar el saldo ficticio que tiene el usuario.
-		// Parámetros: saldo (entero)
-		static void consulta_saldo(int saldo)
+		// Estructura que contiene las acciones que puede realizar el cajero.
+		public struct metodos
 		{
-			Console.Clear();
-			try {
-				Console.WriteLine("\n\tOpción seleccionada: Consulta de saldo");
-				Console.Write("\tEl saldo que posee su cuenta es: ");
-				Console.ForegroundColor = ConsoleColor.Black;
-				Console.BackgroundColor = ConsoleColor.DarkGray;
-				Console.WriteLine("{0}", saldo);
-				Console.ForegroundColor = ConsoleColor.White;
-				Console.BackgroundColor = ConsoleColor.Black;
-			} catch (Exception e) {
-				Console.ForegroundColor = ConsoleColor.Red;
-				Console.Write("\t");
-				Console.WriteLine(e.Message);
-				Console.ForegroundColor = ConsoleColor.White;
-			}
-		}
-		
-		// Método (procedimiento parametrizado) para retirar efectivo de la cuenta del usuario.
-		// Parámetros: saldo (entero)
-		static Boolean retiro(int saldo)
-		{
-			Console.Clear();
-			try {
-				string entrada;
-				int cantidad;
-				
-				Console.WriteLine("\n\tOpción seleccionada: Depósito");
-				Console.WriteLine("\tEl saldo que posee su cuenta es: {0}", saldo);
-				Console.Write("\n\tIngrese la cantidad que desea retirar: ");
-				entrada = Console.ReadLine();
+			public int saldo;
+			
+			// Método (procedimiento) para conslutar el saldo ficticio que tiene el usuario.
+			public void consulta_saldo()
+			{
 				Console.Clear();
-				
-				if (!int.TryParse(entrada, out cantidad)) {
-					Console.ForegroundColor = ConsoleColor.Red;
-					Console.Write("\n\tDebe ingresar un carácter numérico.");
+				try {
+					Console.WriteLine("\n\tOpción seleccionada: Consulta de saldo");
+					Console.Write("\tEl saldo que posee su cuenta es: ");
+					Console.ForegroundColor = ConsoleColor.Black;
+					Console.BackgroundColor = ConsoleColor.DarkGray;
+					Console.WriteLine("{0}", saldo);
 					Console.ForegroundColor = ConsoleColor.White;
-					Console.ReadKey(true);
-					return false;
-				} else if (cantidad == 0) {
+					Console.BackgroundColor = ConsoleColor.Black;
+				} catch (Exception e) {
 					Console.ForegroundColor = ConsoleColor.Red;
-					Console.Write("\n\tLa cantidad a retirar no puede ser cero.");
+					Console.Write("\t");
+					Console.WriteLine(e.Message);
 					Console.ForegroundColor = ConsoleColor.White;
-					Console.ReadKey(true);
-					return false;
-				} else if (cantidad > saldo) {
+				}
+			}
+			
+			// Método (funcion) para retirar efectivo de la cuenta del usuario.
+			// Tipo de retorno: booleano
+			public Boolean retiro()
+			{
+				Console.Clear();
+				try {
+					string entrada;
+					int cantidad;
+					
+					Console.WriteLine("\n\tOpción seleccionada: Depósito");
+					Console.WriteLine("\tEl saldo que posee su cuenta es: {0}", saldo);
+					Console.Write("\n\tIngrese la cantidad que desea retirar: ");
+					entrada = Console.ReadLine();
+					Console.Clear();
+					
+					if (!int.TryParse(entrada, out cantidad)) {
+						Console.ForegroundColor = ConsoleColor.Red;
+						Console.Write("\n\tDebe ingresar un carácter numérico.");
+						Console.ForegroundColor = ConsoleColor.White;
+						Console.ReadKey(true);
+						return false;
+					} else if (cantidad == 0) {
+						Console.ForegroundColor = ConsoleColor.Red;
+						Console.Write("\n\tLa cantidad a retirar no puede ser cero.");
+						Console.ForegroundColor = ConsoleColor.White;
+						Console.ReadKey(true);
+						return false;
+					} else if (cantidad > saldo) {
+						Console.ForegroundColor = ConsoleColor.Red;
+						Console.Write("\n\tLa cantidad a retirar no puede ser mayor que su saldo disponible.");
+						Console.ForegroundColor = ConsoleColor.White;
+						Console.ReadKey(true);
+						return false;
+					} else if (cantidad % 5 != 0) {
+						Console.ForegroundColor = ConsoleColor.Red;
+						Console.Write("\n\tSolo se pueden retirar cantidades múltiplos de cinco.");
+						Console.ForegroundColor = ConsoleColor.White;
+						Console.ReadKey(true);
+						return false;
+					}
+					
+					Console.WriteLine("\n\tTransacción realizada exitosamente.");
+					Console.Write("\tCantidad retirada: ");
+					Console.ForegroundColor = ConsoleColor.Black;
+					Console.BackgroundColor = ConsoleColor.Red;
+					Console.WriteLine("{0}", cantidad);
+					Console.ForegroundColor = ConsoleColor.White;
+					Console.BackgroundColor = ConsoleColor.Black;
+					
+					Console.Write("\tEl saldo que posee su cuenta es: ");
+					Console.ForegroundColor = ConsoleColor.Black;
+					Console.BackgroundColor = ConsoleColor.DarkGray;
+					Console.WriteLine("{0}", saldo - cantidad);
+					Console.ForegroundColor = ConsoleColor.White;
+					Console.BackgroundColor = ConsoleColor.Black;
+					
+					saldo = saldo - cantidad;
+					return true;
+				} catch (Exception e) {
 					Console.ForegroundColor = ConsoleColor.Red;
-					Console.Write("\n\tLa cantidad a retirar no puede ser mayor que su saldo disponible.");
+					Console.Write("\t");
+					Console.WriteLine(e.Message);
 					Console.ForegroundColor = ConsoleColor.White;
-					Console.ReadKey(true);
-					return false;
-				} else if (cantidad % 5 != 0) {
-					Console.ForegroundColor = ConsoleColor.Red;
-					Console.Write("\n\tSolo se pueden retirar cantidades múltiplos de cinco.");
-					Console.ForegroundColor = ConsoleColor.White;
-					Console.ReadKey(true);
+					
 					return false;
 				}
-				
-				Console.WriteLine("\n\tTransacción realizada exitosamente.");
-				Console.Write("\tCantidad retirada: ");
-				Console.ForegroundColor = ConsoleColor.Black;
-				Console.BackgroundColor = ConsoleColor.Red;
-				Console.WriteLine("{0}", cantidad);
-				Console.ForegroundColor = ConsoleColor.White;
-				Console.BackgroundColor = ConsoleColor.Black;
-				
-				Console.Write("\tEl saldo que posee su cuenta es: ");
-				Console.ForegroundColor = ConsoleColor.Black;
-				Console.BackgroundColor = ConsoleColor.DarkGray;
-				Console.WriteLine("{0}", saldo - cantidad);
-				Console.ForegroundColor = ConsoleColor.White;
-				Console.BackgroundColor = ConsoleColor.Black;
-				
-				return true;
-			} catch (Exception e) {
-				Console.ForegroundColor = ConsoleColor.Red;
-				Console.Write("\t");
-				Console.WriteLine(e.Message);
-				Console.ForegroundColor = ConsoleColor.White;
-				
-				return false;
 			}
-		}
-		
-		// Método (procedimiento parametrizado) para depositar saldo en la cuenta del ususario.
-		// Parámetros: saldo (entero)
-		static Boolean deposito(int saldo)
-		{
-			Console.Clear();
-			try {
-				string entrada;
-				int cantidad;
-				
-				Console.WriteLine("\n\tOpción seleccionada: Depósito");
-				Console.WriteLine("\tEl saldo que posee su cuenta es: {0}", saldo);
-				Console.Write("\n\tIngrese la cantidad que desea depositar: ");
-				entrada = Console.ReadLine();
+			
+			// Método (funcion) para depositar saldo en la cuenta del ususario.
+			// Tipo de retorno: booleano
+			public Boolean deposito()
+			{
 				Console.Clear();
-				
-				if (!int.TryParse(entrada, out cantidad)) {
-					Console.ForegroundColor = ConsoleColor.Red;
-					Console.Write("\n\tDebe ingresar un carácter numérico.");
+				try {
+					string entrada;
+					int cantidad;
+					
+					Console.WriteLine("\n\tOpción seleccionada: Depósito");
+					Console.WriteLine("\tEl saldo que posee su cuenta es: {0}", saldo);
+					Console.Write("\n\tIngrese la cantidad que desea depositar: ");
+					entrada = Console.ReadLine();
+					Console.Clear();
+					
+					if (!int.TryParse(entrada, out cantidad)) {
+						Console.ForegroundColor = ConsoleColor.Red;
+						Console.Write("\n\tDebe ingresar un carácter numérico.");
+						Console.ForegroundColor = ConsoleColor.White;
+						Console.ReadKey(true);
+						return false;
+					}
+					
+					Console.WriteLine("\n\tTransacción realizada exitosamente.");
+					Console.Write("\tCantidad depositada: ");
+					Console.ForegroundColor = ConsoleColor.Black;
+					Console.BackgroundColor = ConsoleColor.Green;
+					Console.WriteLine("{0}", cantidad);
 					Console.ForegroundColor = ConsoleColor.White;
-					Console.ReadKey(true);
+					Console.BackgroundColor = ConsoleColor.Black;
+					
+					Console.Write("\tEl saldo que posee su cuenta es: ");
+					Console.ForegroundColor = ConsoleColor.Black;
+					Console.BackgroundColor = ConsoleColor.DarkGray;
+					Console.WriteLine("{0}", saldo + cantidad);
+					Console.ForegroundColor = ConsoleColor.White;
+					Console.BackgroundColor = ConsoleColor.Black;
+					
+					saldo = saldo + cantidad;
+					return true;
+				} catch (Exception e) {
+					Console.ForegroundColor = ConsoleColor.Red;
+					Console.Write("\t");
+					Console.Write(e.Message);
+					Console.ForegroundColor = ConsoleColor.White;
+					
 					return false;
 				}
-				
-				Console.WriteLine("\n\tTransacción realizada exitosamente.");
-				Console.Write("\tCantidad depositada: ");
-				Console.ForegroundColor = ConsoleColor.Black;
-				Console.BackgroundColor = ConsoleColor.Green;
-				Console.WriteLine("{0}", cantidad);
-				Console.ForegroundColor = ConsoleColor.White;
-				Console.BackgroundColor = ConsoleColor.Black;
-				
-				Console.Write("\tEl saldo que posee su cuenta es: ");
-				Console.ForegroundColor = ConsoleColor.Black;
-				Console.BackgroundColor = ConsoleColor.DarkGray;
-				Console.WriteLine("{0}", saldo + cantidad);
-				Console.ForegroundColor = ConsoleColor.White;
-				Console.BackgroundColor = ConsoleColor.Black;
-				
-				return true;
-			} catch (Exception e) {
-				Console.ForegroundColor = ConsoleColor.Red;
-				Console.Write("\t");
-				Console.Write(e.Message);
-				Console.ForegroundColor = ConsoleColor.White;
-				
-				return false;
 			}
 		}
 		
@@ -248,11 +256,10 @@ namespace atm
 		static Boolean salir()
 		{
 			try {
-				string resp;
 				Console.Write("\n\t¿Desea realizar otra acción? [Y/N]: ");
-				resp = Console.ReadLine();
+				char resp = Console.ReadKey().KeyChar;
 				
-				if (resp == "Y" || resp == "y") {
+				if (resp == 'Y' || resp == 'y') {
 					return true;
 				} else {
 					creditos();

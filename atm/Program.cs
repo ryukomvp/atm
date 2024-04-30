@@ -6,6 +6,8 @@
  * 
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
+ 
+// hola
 using System;
 
 namespace atm
@@ -63,14 +65,20 @@ namespace atm
 			} while (salir());
 		}
 		
-		// Método (procedimiento) para validar el pin ingresado por el ususario. Se verifica que sea una cantidad de cuatro dígitos numéricos.
+		// Método (funcion) para validar el pin ingresado por el ususario. Se verifica que sea una cantidad de cuatro dígitos numéricos.
+		// Tipo de retorno: booleano
 		static Boolean pin() {
 			try {
 				string entrada;
 				int pin;
 				
 				Console.Write("\n\tIngrese su pin: ");
+				Console.ForegroundColor = ConsoleColor.Black;
+				Console.BackgroundColor = ConsoleColor.White;
+				Console.Write("");
 				entrada = Console.ReadLine();
+				Console.ForegroundColor = ConsoleColor.White;
+				Console.BackgroundColor = ConsoleColor.Black;
 				if (entrada.Length == 4 && int.TryParse(entrada, out pin)) {
 					return true;
 				} else {
